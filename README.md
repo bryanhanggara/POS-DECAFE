@@ -12,7 +12,7 @@ Make sure you have installed the latest version of Node.js and Composer.
 - Clone the repository with the following command:
 
 ```bash
-git clone https://github.com/rihannh/CinemaCGW.git
+git clone https://github.com/bryanhanggara/POS-DECAFE.git
 ```
 - Then run : <code>composer install</code>
 
