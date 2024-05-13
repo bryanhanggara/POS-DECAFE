@@ -115,8 +115,12 @@
                                             <span class="">Total</span>
                                             <span class="text-gray-500">{{$totalPrice}}</span>
                                         </div>
-                                        <a href="#"
-                                            class="border flex justify-center items-center bg-peach-500 text-white my-4 py-2 rounded-md hover:bg-peach-600 duration-300">Payment Process</a>
+                                      
+                                            <form action="{{ route('cart.store') }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="p-3 border flex justify-center items-center bg-peach-500 text-white my-4 py-2 rounded-md hover:bg-peach-600 duration-300">Checkout</button>
+                                            </form>
+                                            
                                     </div>
                                 </div>
                             </div>

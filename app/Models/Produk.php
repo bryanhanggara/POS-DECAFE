@@ -9,6 +9,7 @@ class Produk extends Model
 {
     use HasFactory;
 
+    
     protected $fillable = [
         'nama_makanan',
         'harga',
@@ -17,10 +18,10 @@ class Produk extends Model
         'category'
     ];
 
-    public function transactionDetails()
-    {
-        return $this->hasMany(TransaksiDetail::class, 'produk_id','id');
-    }
+    // public function transactionDetails()
+    // {
+    //     return $this->hasMany(TransaksiDetail::class, 'produk_id','id');
+    // }
 
     
 }

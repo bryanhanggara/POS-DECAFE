@@ -13,8 +13,9 @@
             </div>
             <div class="p-2 mb-4 border border-peach-500 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700">
                 <ol class="mt-3 divide-y divider-gray-200 dark:divide-gray-700 ">
+                    @foreach ($transactions as $item)
                     <li>
-                        <a href="#"
+                        <a href="{{route('transactions.show',$item->id)}}"
                             class="items-center flex gap-4 py-4 px-7 text-gray-400 transition duration-75 rounded-lg group hover:bg-peach-100 hover:text-peach-500 dark:text-white dark:hover:bg-gray-700 my-1">
                             <img class="w-12 h-12 aspect-square object-cover rounded-full sm:mb-0"
                                 src="{{url('front-end-pos/src/image/Pas Foto2.png')}}" alt="Jese Leos image" />
@@ -24,55 +25,16 @@
                                     <div class="text-base font-normal">
                                         <span class="font-medium text-gray-900 dark:text-white">Transaction</span>
                                         By
-                                        <span class="font-medium text-gray-900 dark:text-white"> Suciana Briana
+                                        <span class="font-medium text-gray-900 dark:text-white"> {{$item->user->name}}
                                         </span>
                                     </div>
-                                    <div class="text-sm font-normal">January 14th, 2024</div>
+                                    <div class="text-sm font-normal">{{$item->created_at}}</div>
                                 </div>
-                                <span class="font-medium text-gray-900 dark:text-white">Rp 24.000</span>
+                                <span class="font-medium text-gray-900 dark:text-white">{{$item->transaction_total}}</span>
                             </div>
                         </a>
                     </li>
-                    <li>
-                        <a href="#"
-                            class="items-center flex gap-4 py-4 px-7 text-gray-400 transition duration-75 rounded-lg group hover:bg-peach-100 hover:text-peach-500 dark:text-white dark:hover:bg-gray-700 my-1">
-                            <img class="w-12 h-12 aspect-square object-cover rounded-full sm:mb-0"
-                                src="{{url('front-end-pos/src/image/Pas Foto2.png')}}" alt="Jese Leos image" />
-                            <div
-                                class="flex md:items-center md:space-x-4 flex-col md:flex-row justify-start md:justify-between w-full">
-                                <div class="text-gray-600 group dark:text-gray-400">
-                                    <div class="text-base font-normal">
-                                        <span class="font-medium text-gray-900 dark:text-white">Transaction</span>
-                                        By
-                                        <span class="font-medium text-gray-900 dark:text-white"> Suciana Briana
-                                        </span>
-                                    </div>
-                                    <div class="text-sm font-normal">January 14th, 2024</div>
-                                </div>
-                                <span class="font-medium text-gray-900 dark:text-white">Rp 24.000</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="items-center flex gap-4 py-4 px-7 text-gray-400 transition duration-75 rounded-lg group hover:bg-peach-100 hover:text-peach-500 dark:text-white dark:hover:bg-gray-700 my-1">
-                            <img class="w-12 h-12 aspect-square object-cover rounded-full sm:mb-0"
-                                src="{{url('front-end-pos/src/image/Pas Foto2.png')}}" alt="Jese Leos image" />
-                            <div
-                                class="flex md:items-center md:space-x-4 flex-col md:flex-row justify-start md:justify-between w-full">
-                                <div class="text-gray-600 group dark:text-gray-400">
-                                    <div class="text-base font-normal">
-                                        <span class="font-medium text-gray-900 dark:text-white">Transaction</span>
-                                        By
-                                        <span class="font-medium text-gray-900 dark:text-white"> Suciana Briana
-                                        </span>
-                                    </div>
-                                    <div class="text-sm font-normal">January 14th, 2024</div>
-                                </div>
-                                <span class="font-medium text-gray-900 dark:text-white">Rp 24.000</span>
-                            </div>
-                        </a>
-                    </li>
+                    @endforeach
                 </ol>
             </div>
             <nav aria-label="Page navigation example">

@@ -35,11 +35,11 @@ class CheckoutController extends Controller
 
         foreach ($cartItems as $key => $item) {
 
-        if (isset($item['product_id']) && $item['product_id'] == $productId) {
-            unset($cartItems[$key]);
-            break;
+            if (isset($item['product_id']) && $item['product_id'] == $productId) {
+                unset($cartItems[$key]);
+                break;
+            }
         }
-    }
             session()->put('cart', $cartItems);
             return redirect()->back()->with('success', 'Product removed from cart successfully.');
     }
@@ -72,43 +72,63 @@ class CheckoutController extends Controller
         return view('cart', compact('products', 'totalPrice'));
     }
 
-    public function store(Request $request)
+    public function store()
     {
-        $userId = auth()->id();
+        $cartItems = session()->get('cart', []);
+        $totalPrice = 0;
 
-        \DB::transaction(function() use($request, $userId){
-            $transaksi = Transaction::create([
-                'users_id' => $userId,
-                'transaction_total' => 0,
-                'transaction_status' => 'created',
-                'total_payment' => 0,
-                'return' => 0,
-            ]);
-            foreach($request->input('cart') as $item) {
-                TransactionDetail::create([
-                    'transaction_id' => $transaksi->id,
-                    'produk_id' => $item['produk_id'],
-                    'price_produk' => Produk::find($item['produk_id'])->harga,
-                    'qty_produk' => $item['qty'],
-                ]);
+        foreach ($cartItems as $item) {
+            $product = Produk::find($item['product_id']);
     
-                Produk::find($item['produk_id'])->update([
-                    'qty_produk' => Produk::find($item['produk_id'])->qty_produk - $item['qty_produk'],
-                ]);
-    
-                $transaksi->transaction_total += ($item['qty_produk'] * Produk::find($item['produk_id'])->harga);
-                $transaksi->total_payment += ($item['qty_produk'] * Produk::find($item['produk_id'])->harga);
+            if ($product) {
+                $totalQuantity = $item['quantity'];
+                $totalPrice += $product->harga * $totalQuantity;
+
+                $product->stok -= $item['quantity'];
+                $product->save();
+            }
+        }
+        $transaction = new Transaction();
+        $transaction->users_id = auth()->user()->id; 
+        $transaction->transaction_status = 'Success';
+        $transaction->transaction_total = $totalPrice;
+        $transaction->total_payment = 0; 
+        $transaction->return = 0;
+        $transaction->save();
+
+        if (!empty($cartItems)) {
+
+            $groupedProducts = collect($cartItems)->groupBy('product_id');
+            
+            foreach ($groupedProducts as $productId => $items) {
         
+                $product = Produk::find($productId);
+        
+                if ($product) {
+                    $totalQuantity = $items->sum('quantity');
+                    $product->quantity = $totalQuantity;
+                    $totalSubPrice = $product->quantity * $product->harga;
+                    $totalPrice += $product->harga * $totalQuantity;
+
+                    $transactionDetail = new TransactionDetail();
+                    $transactionDetail->transaction_id = $transaction->id;
+                    $transactionDetail->produk_id = $product->id;
+                    $transactionDetail->price_produk = $totalSubPrice;
+                    $transactionDetail->qty_produk = $totalQuantity;
+                    $transactionDetail->save();
+                }
+               
             }
 
-            $transaksi->transaction_status = 'paid';
-            $transaksi->save();
-        });
+            session()->forget('cart');
 
-        return response()->json(['message' => 'Transaksi berhasil dibuat'], 201);
+            // return response()->json(['masuk']);
+            return redirect()->route('history');
+        } else {
+            return response()->json(['koosong']);
+        }
+
+
     }
-
-    
-
 
 }
